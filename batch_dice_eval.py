@@ -36,9 +36,19 @@ from skimage.color import rgb2gray
 # ---------------------------------------------------------------------------
 def read_annotation(tif_path):
     with tifffile.TiffFile(tif_path) as tf:
-        seg_layer = tf.pages[1].asarray()
-        seg_layer = seg_layer[:,:,:3]
-        raw_layer = tf.pages[0].asarray()
+        layer1 = tf.pages[1].asarray()
+        layer0 = tf.pages[0].asarray()
+        len1 = len(np.unique(layer1))
+        len0 = len(np.unique(layer0))
+        
+        if len0 > len1:
+            raw_layer = layer0
+            seg_layer = layer1
+            seg_layer = seg_layer[:,:,:3]
+        else:
+           raw_layer = layer1
+           seg_layer = layer0
+           seg_layer = seg_layer[:,:,:3]
     return seg_layer, raw_layer
 
 
